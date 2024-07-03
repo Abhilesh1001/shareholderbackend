@@ -31,7 +31,9 @@ urlpatterns = [
     # Loan Collection 
     path('loancollection',views.LoanCollectionView.as_view()),
     path('loancollection/<int:pk>',views.LoanCollectionView.as_view()),
+    path('loancollectionPer',views.LoanCollectionPerView.as_view()),
     path('loanDataView',views.LoanDataAPIView.as_view()),
+    path('loanCollectionViewDate/<int:pk>',views.LoanCollectionViewDate.as_view()),
     
     # cashflowstatement 
     path('cashflow',views.CashFlowStatement.as_view()),

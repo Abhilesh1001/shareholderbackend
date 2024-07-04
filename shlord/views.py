@@ -599,15 +599,51 @@ class LoanDataAPIView(APIView):
 from django.db.models import Sum
 
 def collection_summary(company):
-    collection_dates = LoanColl.objects.filter(usersf__company=company).values('collection_date').annotate(total_amount=Sum('amount_collected'))
-    summary_dict = {item['collection_date'].strftime('%Y-%m-%d'): float(item['total_amount']) for item in collection_dates}
+    # Ensure filtering by company and that collection_date is not null
+    collection_dates = LoanColl.objects.filter(usersf__company=company, collection_date__isnull=False).values('collection_date').annotate(total_amount=Sum('amount_collected'))
+
+    # Construct the summary dictionary
+    summary_dict = {}
+    local_timezone = get_current_timezone()
+    
+    for item in collection_dates:
+        collection_date = item['collection_date']
+        if collection_date:
+            # Convert UTC datetime to local timezone
+            collection_date_local = collection_date.astimezone(local_timezone)
+            # Format the date to 'YYYY-MM-DD'
+            formatted_date = collection_date_local.strftime('%Y-%m-%d')
+            # Add the total amount to the summary dictionary
+            if formatted_date in summary_dict:
+                summary_dict[formatted_date] += float(item['total_amount'])
+            else:
+                summary_dict[formatted_date] = float(item['total_amount'])
 
     return summary_dict
 
 
 def collection_summary_RD(company):
-    collection_dates = RDColl.objects.filter(usersf__company=company).values('collection_date').annotate(total_amount=Sum('amount_collected'))
-    summary_dict = {item['collection_date'].strftime('%Y-%m-%d'): float(item['total_amount']) for item in collection_dates}
+    # Ensure filtering by company and that collection_date is not null
+    collection_dates = RDColl.objects.filter(usersf__company=company, collection_date__isnull=False).values('collection_date').annotate(total_amount=Sum('amount_collected'))
+
+    # Construct the summary dictionary
+    summary_dict = {}
+    local_timezone = get_current_timezone()
+    
+    for item in collection_dates:
+        collection_date = item['collection_date']
+        if collection_date:
+            # Convert UTC datetime to local timezone
+            collection_date_local = collection_date.astimezone(local_timezone)
+            # Format the date to 'YYYY-MM-DD'
+            formatted_date = collection_date_local.strftime('%Y-%m-%d')
+            # Add the total amount to the summary dictionary
+            if formatted_date in summary_dict:
+                summary_dict[formatted_date] += float(item['total_amount'])
+            else:
+                summary_dict[formatted_date] = float(item['total_amount'])
+
+    return summary_dict
 
     
     

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from cusauth.renderers import UserRenderer
 from cusauth.models import User
-from .serilizer import PersonSerilizer,ShareHolderFunsSerilizer,ShareHolderFunsDataDisSerializer,SerilzerHOlderFund,RdIntersetOrignalSerilizer,RdIntersetSerilizer,RDColloectionSerilizer,RDCollectionDataallSerializer,RDCollectionDataSerializer,LaonaAmountSerilizer,LaonaAmountIntrestSerilizer,LoanCollectionSerilizer,LoanCollectionDataallSerializer,LoanCollectionDataSerializer,StaffSerilizer ,ParticularSerilizer,FixedDepositeSerilizer,AssetSerilizer,StaffSerilizerwithname,FixedDepositeName,PersonSerializer,ShareHolderFunsSerializer,LoanCollectionDataallSerializerViewData
+from .serilizer import PersonSerilizer,ShareHolderFunsSerilizer,ShareHolderFunsDataDisSerializer,SerilzerHOlderFund,RdIntersetOrignalSerilizer,RdIntersetSerilizer,RDColloectionSerilizer,RDCollectionDataallSerializer,RDCollectionDataSerializer,LaonaAmountSerilizer,LaonaAmountIntrestSerilizer,LoanCollectionSerilizer,LoanCollectionDataallSerializer,LoanCollectionDataSerializer,StaffSerilizer ,ParticularSerilizer,FixedDepositeSerilizer,AssetSerilizer,StaffSerilizerwithname,FixedDepositeName,PersonSerializer,ShareHolderFunsSerializer,LoanCollectionDataallSerializerViewData,RDCollectionDataallSerializerViewData
 from .models import Person,LoanInt,LoanColl,ShareHolder,RDColl,RDInt,StaffSalary,Partuclars,FixedDeposite,Asset
 from collections import defaultdict
 from django.utils.timezone import make_aware
@@ -270,6 +270,68 @@ class RDcollectionView(APIView):
             serilizer.save()
             return Response({'msg':'RDcollection Updated Successfully','data':serilizer.data},status=status.HTTP_200_OK)
         return Response(serilizer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+class RDcollectionPerView(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request,format=None):
+        serilizer = RDColloectionSerilizer(data=request.data)
+        if serilizer.is_valid():
+            serilizer.save()
+            return Response({'msg':'RD Intrest Created Successfully','data':serilizer.data},status=status.HTTP_201_CREATED)
+        return Response(serilizer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class RDcollectionViewDate(APIView):
+    renderer_classes =[UserRenderer]
+    permission_classes=[IsAuthenticated]
+    def post(self, request, pk=None, format=None):
+        collection_date_str = request.data.get('collection_date')
+        user_company = request.user.company
+        
+        if not collection_date_str:
+            return Response({'error': 'collection_date parameter is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Parse the date string to a date object
+            collection_date = parse_date(collection_date_str)
+
+            if collection_date is None:
+                return Response({'error': 'Invalid date format. Use YYYY-MM-DD format.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Make the date timezone-aware
+            current_timezone = get_current_timezone()
+            collection_date = make_aware(datetime.combine(collection_date, datetime.min.time()), current_timezone)
+            print("Parsed and timezone-aware date:", collection_date)
+
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        if pk is not None:
+            rd_collections = RDColl.objects.filter(
+                rd_interest=pk,
+                collection_date__date=collection_date.date(),
+                usersf__company=user_company
+            )
+            print("Filtered Loan Collections:", rd_collections)
+            print("Database Entries:")
+            for rd in RDColl.objects.filter(rd_interest=pk):
+                print(f"ID: {rd.rd_collection_id}, Collection Date: {rd.collection_date}, Company: {rd.usersf.company}")
+
+            if rd_collections.exists():
+                # Process the loan collections as needed, e.g., serialization
+                serializer = RDCollectionDataallSerializerViewData(rd_collections, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'No loan collections found for the given date.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'pk parameter is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    
 
    
 class RDDataAPIView(APIView):
@@ -647,7 +709,6 @@ def collection_summary_RD(company):
 
     
     
-    return summary_dict
    
 
 def collection_summary_loanDistribute(company):

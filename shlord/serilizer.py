@@ -71,6 +71,21 @@ class RDCollectionDataallSerializer(serializers.ModelSerializer):
         fields = ['rd_interest', 'person_name', 'duration', 'interest', 'is_active', 'start_date', 'closing_date', 'person_id', 'amount_collected', 'usersf', 'remarks', 'collection_date','rd_id']
 
 
+class RDCollectionDataallSerializerViewData(serializers.ModelSerializer):
+    person_name = serializers.CharField(source='rd_interest.person.name')
+    person_id = serializers.IntegerField(source='rd_interest.person.person_id')
+    duration = serializers.IntegerField(source='rd_interest.duration')
+    interest = serializers.DecimalField(source='rd_interest.interest_rate', max_digits=10, decimal_places=3)
+    start_date = serializers.DateTimeField(source='rd_interest.start_date')
+    closing_date = serializers.DateTimeField(source='rd_interest.closing_date')
+    is_active = serializers.BooleanField(source='rd_interest.is_active')
+    rd_id  = serializers.IntegerField(source='rd_interest.rd_id')
+
+    class Meta:
+        model = RDColl
+        fields = ['rd_collection_id','rd_interest', 'person_name', 'duration', 'interest', 'is_active', 'start_date', 'closing_date', 'person_id', 'amount_collected', 'usersf', 'remarks', 'collection_date','rd_id']
+
+
 class RDCollectionDataSerializer(serializers.ModelSerializer):
     person_name = serializers.CharField(source='rd_interest.person.name')
     person_id = serializers.IntegerField(source='rd_interest.person.person_id')

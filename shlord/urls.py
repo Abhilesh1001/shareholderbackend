@@ -22,6 +22,9 @@ urlpatterns = [
     # RD collection     
     path('rdcollection',views.RDcollectionView.as_view()),
     path('rdcollection/<int:pk>',views.RDcollectionView.as_view()),
+    path('rdcollectionPer',views.RDcollectionPerView.as_view()),
+    path('rdCollectionViewDate/<int:pk>',views.RDcollectionViewDate.as_view()),
+
     path('rdDataView',views.RDDataAPIView.as_view()),
     path('orignalrdcollectionnew/<int:pk>',views.OrignalRDcollectionView.as_view()),
     # Loan Intrest 

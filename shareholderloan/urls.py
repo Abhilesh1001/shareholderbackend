@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('cus/',include('cusauth.urls')),
     path('loan/',include('shlord.urls')),
+    path('adminpanel/',include('adminpanelall.urls')),
 ]
 
 if settings.DEBUG:

@@ -4,6 +4,8 @@ from django.utils.encoding import smart_str, force_bytes,DjangoUnicodeDecodeErro
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from . models import ProfileUpdate
+from django.contrib.auth.models import Permission
+from cusauth.models import User,Role
 
 
 from django.core.mail import send_mail
@@ -131,3 +133,31 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileUpdate
         fields = ['user', 'Date_of_Birth', 'profile_picture']
+
+
+
+# permission classes 
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ['id', 'name', 'codename', 'content_type']
+
+class RoleSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Role
+        fields = ['id', 'name', 'company', 'permissions']
+
+class UserSerializer(serializers.ModelSerializer):
+    roles = RoleSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'name', 'company', 'roles', 'is_admin', 'is_active']
+
+
+class AssignRoleSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    role_id = serializers.IntegerField()

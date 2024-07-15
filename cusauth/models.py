@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
+
+
 class Company(models.Model):
     name = models.CharField(max_length=255, unique=True)
     company_code = models.CharField(max_length=50, unique=True)
@@ -9,6 +11,14 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Role(models.Model):
+    name = models.CharField(max_length=50)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    permissions = models.ManyToManyField('auth.Permission', blank=True)
+
+
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, name, company, tc, password=None, password2=None):
@@ -45,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=200)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)  # Use the ID of your default company
     tc = models.BooleanField()
+    roles = models.ManyToManyField(Role, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -75,10 +86,7 @@ class ProfileUpdate(models.Model):
     pan_number = models.CharField(max_length=50)
     pan_picture = models.ImageField(upload_to='auth/media')
 
-class Role(models.Model):
-    name = models.CharField(max_length=50)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    permissions = models.ManyToManyField('auth.Permission', blank=True)
+
 
     def __str__(self):
         return f"{self.name} ({self.company.name})"

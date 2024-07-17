@@ -9,7 +9,7 @@ echo "New changes copied to server !"
 
 # Activate Virtual Env
 source abhi/bin/activate
-echo "Virtual env 'mb' Activated !"
+echo "Virtual env 'abhi' Activated !"
 
 echo "Installing Dependencies..."
 pip install -r requirements.txt --no-input
@@ -23,7 +23,7 @@ python manage.py migrate
 
 # Deactivate Virtual Env
 deactivate
-echo "Virtual env 'mb' Deactivated !"
+echo "Virtual env 'abhi' Deactivated !"
 
 # Reloading Application So New Changes could reflect on website
 pushd shareholderloan

@@ -38,7 +38,7 @@ echo "Virtual environment 'abhi' deactivated!"
 
 # Reloading application to reflect new changes
 echo "Reloading application..."
-touch shareholderbackend/wsgi.py
+touch shareholderloan/wsgi.py
 echo "Application reloaded!"
 
 echo "Deployment finished!"

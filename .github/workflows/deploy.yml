@@ -8,21 +8,27 @@ on:
   pull_request:
     branches: ["master"]
 
-# Authenticate to the the server via ssh
-# and run our deployment script
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          script: "cd /var/www/shareholderbackend && ./.scripts/deploy.sh"
+          script: |
+            cd /var/www/shareholderbackend
+            ./.scripts/deploy.sh
 
 
 

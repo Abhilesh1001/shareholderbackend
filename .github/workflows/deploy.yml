@@ -1,7 +1,5 @@
 name: Deploy
 
-# Trigger the workflow on push and
-# pull request events on the master branch
 on:
   push:
     branches: ["main"]
@@ -14,7 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -29,9 +27,6 @@ jobs:
           script: |
             cd /var/www/shareholderbackend
             ./.scripts/deploy.sh
-
-
-
 
 
 

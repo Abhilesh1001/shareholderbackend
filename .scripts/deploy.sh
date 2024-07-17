@@ -9,17 +9,17 @@ echo "New changes copied to server !"
 
 # Activate Virtual Env
 source abhi/bin/activate
-echo "Virtual env 'abhi' Activated !"
+echo "Virtual env 'mb' Activated !"
 
 echo "Installing Dependencies..."
 pip install -r requirements.txt --no-input
 
 echo "Serving Static Files..."
-python3 manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
 
 echo "Running Database migration"
-python3 manage.py makemigrations
-python3 manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 
 # Deactivate Virtual Env
 deactivate

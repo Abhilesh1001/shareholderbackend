@@ -15,11 +15,11 @@ echo "Installing Dependencies..."
 pip install -r requirements.txt --no-input
 
 echo "Serving Static Files..."
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 echo "Running Database migration"
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 
 # Deactivate Virtual Env
 deactivate

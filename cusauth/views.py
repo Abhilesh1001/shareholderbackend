@@ -7,7 +7,7 @@ from cusauth.models import User,Role
 # Create your views here.
 
 def authview(request):
-    return HttpResponse('auth view change new change check ')
+    return HttpResponse('auth view change new test5')
     
 from django.shortcuts import render,HttpResponse
 from rest_framework.response import Response

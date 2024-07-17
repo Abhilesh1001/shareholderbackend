@@ -3,42 +3,31 @@ set -e
 
 echo "Deployment started ..."
 
-# Navigate to the project directory
-cd /var/www/shareholderbackend
-
 # Pull the latest version of the app
-echo "Pulling latest changes from Git..."
-git pull origin master
-echo "New changes copied to server!"
+git pull origin main
+echo "New changes copied to server !"
 
 # Activate Virtual Env
-echo "Activating virtual environment 'abhi'..."
 source abhi/bin/activate
-echo "Virtual environment 'abhi' activated!"
+echo "Virtual env 'mb' Activated !"
 
-# Install dependencies
-echo "Installing dependencies..."
+echo "Installing Dependencies..."
 pip install -r requirements.txt --no-input
-echo "Dependencies installed!"
 
-# Collect static files
-echo "Collecting static files..."
+echo "Serving Static Files..."
 python manage.py collectstatic --noinput
-echo "Static files collected!"
 
-# Run database migrations
-echo "Running database migrations..."
+echo "Running Database migration"
 python manage.py makemigrations
 python manage.py migrate
-echo "Database migrations completed!"
 
 # Deactivate Virtual Env
 deactivate
-echo "Virtual environment 'abhi' deactivated!"
+echo "Virtual env 'mb' Deactivated !"
 
-# Reloading application to reflect new changes
-echo "Reloading application..."
-touch shareholderloan/wsgi.py
-echo "Application reloaded!"
+# Reloading Application So New Changes could reflect on website
+pushd shareholderloan
+touch wsgi.py
+popd
 
-echo "Deployment finished!"
+echo "Deployment Finished!"

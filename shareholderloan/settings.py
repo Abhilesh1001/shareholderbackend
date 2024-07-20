@@ -183,6 +183,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://sharerloanrdcollection.vercel.app",
     "http://www.abhilesh.online",
     "https://www.abhilesh.online",
+    "http://mayoorstore.online/",
+    "https://mayoorstore.online/"
 ]
 
 

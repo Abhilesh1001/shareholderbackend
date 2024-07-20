@@ -150,7 +150,7 @@ class UserPassewordResetView(APIView):
 
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer] 
-
+    
     def get(self, request, format=None):
         profiles = ProfileUpdate.objects.all()
         serializer = UserProfileSerializer(profiles, many=True) 

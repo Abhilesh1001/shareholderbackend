@@ -17,7 +17,7 @@ SECRET_KEY = 'django-insecure-p-46oorgzz9ol05fbx6nt-i7r63aim@40inhu$h$%ww8+=7!ou
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1']
+ALLOWED_HOSTS = ['10.0.2.2','127.0.0.1','10.0.2.2','127.0.0.1','www.abhilesh.online','www.abhilesh.online']
 
 
 # Application definition
@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'shareholderloan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'mddb/db.sqlite3',
+        'NAME': BASE_DIR / 'mbdb/db.sqlite3',
     }
 }
 
@@ -84,6 +84,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
+     
 }
 
 REST_FRAMEWORK = {
@@ -179,8 +180,13 @@ CORS_ALLOWED_ORIGINS = [
     "https://materialmovement.vercel.app",
     "https://procurement-mu.vercel.app",
     "https://sharerdloan.vercel.app",
-    "https://sharerloanrdcollection.vercel.app"
+    "https://sharerloanrdcollection.vercel.app",
+    "http://www.abhilesh.online",
+    "https://www.abhilesh.online",
 ]
+
+
+
 
 AUTH_USER_MODEL = "cusauth.User"
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')

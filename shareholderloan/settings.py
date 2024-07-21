@@ -185,9 +185,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.abhilesh.online",
     "http://mayoorstore.online",
     "https://mayoorstore.online",
-    "https://www.abhilesh.online",
-    "http://www.mayoorstore.online"
-
+    "https://www.mayoorstore.online"
 
 ]
 

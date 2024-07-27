@@ -9,7 +9,7 @@ echo "New changes copied to server !"
 
 # Activate Virtual Env
 source abhi/bin/activate
-echo "Virtual env 'mb' Activated !"
+echo "Virtual env 'abhi' Activated !"
 
 echo "Installing Dependencies..."
 pip install -r requirements.txt --no-input

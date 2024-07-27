@@ -225,7 +225,6 @@ class AssignPermissionView(APIView):
         user_id = request.data.get('user_id')
         permission_id = request.data.get('permission_id')
 
-        print('userID',user_id,permission_id)
         if not user_id or not permission_id:
             return Response({'error': 'user_id and permission_id are required'}, status=status.HTTP_400_BAD_REQUEST)
 

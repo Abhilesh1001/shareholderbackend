@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/permissions/', views.ListPermissionsView.as_view(), name='list_permissions'),
     path('api/permissions/assign/',views.AssignPermissionView.as_view(), name='assign_permission'),
     path('api/permissions/revoke/', views.RevokePermissionView.as_view(), name='revoke_permission'),
+    path('api/permissions/user/<int:user_id>/', views.ListUserPermissionsView.as_view(), name='revoke_permissions'),
 
 
 #    Role Permissions 

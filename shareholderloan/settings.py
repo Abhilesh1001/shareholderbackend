@@ -202,3 +202,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'abhileshmovies@gmail.com'
 EMAIL_HOST_PASSWORD = 'pbtt omms cdnk pwso'
+
+

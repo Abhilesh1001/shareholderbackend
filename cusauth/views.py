@@ -202,6 +202,8 @@ class ProfileUpdateAPIView(APIView):
 
 
 
+
+
 # Permissions classes 
 
 
@@ -212,14 +214,38 @@ class ListPermissionsView(APIView):
         permissions = Permission.objects.all().values('id', 'name', 'codename', 'content_type__model')
         return Response(permissions)
 
+
+
+
 class AssignPermissionView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request):
-        user = User.objects.get(id=request.data['user_id'])
-        permission = Permission.objects.get(id=request.data['permission_id'])
-        user.user_permissions.add(permission)
-        return Response({'status': 'permission assigned'})
+        print('first')
+        user_id = request.data.get('user_id')
+        permission_id = request.data.get('permission_id')
+
+        print('userID',user_id,permission_id)
+        if not user_id or not permission_id:
+            return Response({'error': 'user_id and permission_id are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(id=user_id)
+            permission = Permission.objects.get(id=permission_id)
+           
+            user.user_permissions.add(permission)
+           
+            return Response({'status': 'permission assigned ok'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+           
+           
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Permission.DoesNotExist:
+          
+            return Response({'error': 'Permission not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class RevokePermissionView(APIView):
     permission_classes = [IsAdminUser]
@@ -229,6 +255,18 @@ class RevokePermissionView(APIView):
         permission = Permission.objects.get(id=request.data['permission_id'])
         user.user_permissions.remove(permission)
         return Response({'status': 'permission revoked'})
+    
+
+class ListUserPermissionsView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            user_permissions = user.user_permissions.all().values('id', 'name', 'codename', 'content_type__model')
+            return Response(user_permissions)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
 
 
 

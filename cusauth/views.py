@@ -213,6 +213,7 @@ class ListPermissionsView(APIView):
     def get(self, request):
         permissions = Permission.objects.all().values('id', 'name', 'codename', 'content_type__model')
         return Response(permissions)
+    
 
 
 

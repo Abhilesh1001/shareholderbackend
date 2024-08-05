@@ -1,6 +1,4 @@
 from django.shortcuts import render,HttpResponse
-from django.contrib.auth.models import Permission
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAdminUser
 
 # Create your views here.

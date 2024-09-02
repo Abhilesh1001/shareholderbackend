@@ -87,10 +87,6 @@ class ProfileUpdate(models.Model):
     pan_picture = models.ImageField(upload_to='auth/media')
 
 
-
-    def __str__(self):
-        return f"{self.name} ({self.company.name})"
-
 class UserRole(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)

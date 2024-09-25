@@ -8,7 +8,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
         ("Personal info", {"fields": ["name", "tc", "company"]}),
-        ("Permissions", {"fields": ["is_admin", "groups", "user_permissions"]}),
+        ("Permissions", {"fields": ["is_admin", "groups", "user_permissions","is_company_admin",]}),
     ]
     add_fieldsets = [
         (

@@ -39,7 +39,7 @@ urlpatterns = [
 # as per company 
     path('api/roles/company', views.ListRolesCompanyView.as_view(), name='list_roles_company'),
     path('api/roles/assign/company', views.AssignRoleCompanyView.as_view(), name='assign_role_company'),
-    path('api/users/company', views.ListUsersComapnyView.as_view(), name='list_users_company'),
+    path('api/users/company', views.ListUsersCompanyView.as_view(), name='list_users_company'),
 
 
 ]

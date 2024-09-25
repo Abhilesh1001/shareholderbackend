@@ -7,7 +7,7 @@ from cusauth.models import User,Role
 # Create your views here.
 
 def authview(request):
-    return HttpResponse('auth view see')
+    return HttpResponse('auth view see ok')
     
 from django.shortcuts import render,HttpResponse
 from rest_framework.response import Response
@@ -309,11 +309,18 @@ class ListUsersView(APIView):
 
 # for perticular copmpany permissions 
 
+from rest_framework.permissions import BasePermission
+from django.shortcuts import get_object_or_404
 
-
-class IsCompanyAdminUser(IsAdminUser):
+class IsCompanyAdminUser(BasePermission):
     def has_permission(self, request, view):
-        return super().has_permission(request, view) and request.user.is_authenticated and request.user.is_active and request.user.company == view.get_company(request)
+        # Ensure the user is authenticated and is a company admin
+        return (
+            request.user.is_authenticated and 
+            request.user.is_active and 
+            request.user.is_company_admin and  # Check if the user is a company admin
+            request.user.company == view.get_company(request)
+        )
 
 class ListPermissionsCompanyView(APIView):
     permission_classes = [IsCompanyAdminUser]
@@ -322,12 +329,10 @@ class ListPermissionsCompanyView(APIView):
         return request.user.company
 
     def get(self, request):
-        permissions = Permission.objects.filter(
-            content_type__app_label__in=[
-                'cusauth',
-                'shlord',  # Replace with the actual app names you want to filter by
-            ]
-        ).values('id', 'name', 'codename', 'content_type__model')
+        # permissions = Permission.objects.filter(
+        #     content_type__app_label__in=['cusauth', 'shlord','shareholderloan','adminpanelall','auth']
+        # ).values('id', 'name', 'codename', 'content_type__model') // as per model permissiions 
+        permissions = Permission.objects.all().values('id', 'name', 'codename', 'content_type__model')
         return Response(permissions)
 
 class AssignPermissionCompanyView(APIView):
@@ -337,13 +342,13 @@ class AssignPermissionCompanyView(APIView):
         return request.user.company
 
     def post(self, request):
-        user = User.objects.get(id=request.data['user_id'])
+        user = get_object_or_404(User, id=request.data['user_id'])
         if user.company != request.user.company:
             return Response({'error': 'You can only assign permissions to users within your company.'}, status=status.HTTP_403_FORBIDDEN)
 
-        permission = Permission.objects.get(id=request.data['permission_id'])
+        permission = get_object_or_404(Permission, id=request.data['permission_id'])
         user.user_permissions.add(permission)
-        return Response({'status': 'permission assigned'})
+        return Response({'status': 'permission assigned'}, status=status.HTTP_200_OK)
 
 class RevokePermissionCompanyView(APIView):
     permission_classes = [IsCompanyAdminUser]
@@ -352,13 +357,13 @@ class RevokePermissionCompanyView(APIView):
         return request.user.company
 
     def post(self, request):
-        user = User.objects.get(id=request.data['user_id'])
+        user = get_object_or_404(User, id=request.data['user_id'])
         if user.company != request.user.company:
             return Response({'error': 'You can only revoke permissions from users within your company.'}, status=status.HTTP_403_FORBIDDEN)
 
-        permission = Permission.objects.get(id=request.data['permission_id'])
+        permission = get_object_or_404(Permission, id=request.data['permission_id'])
         user.user_permissions.remove(permission)
-        return Response({'status': 'permission revoked'})
+        return Response({'status': 'permission revoked'}, status=status.HTTP_200_OK)
 
 class ListRolesCompanyView(APIView):
     permission_classes = [IsCompanyAdminUser]
@@ -380,22 +385,18 @@ class AssignRoleCompanyView(APIView):
     def post(self, request):
         serializer = AssignRoleSerializer(data=request.data)
         if serializer.is_valid():
-            user = User.objects.get(id=serializer.validated_data['user_id'])
-            if user.company != request.user.company:
-                return Response({'error': 'You can only assign roles to users within your company.'}, status=status.HTTP_403_FORBIDDEN)
+            user = get_object_or_404(User, id=serializer.validated_data['user_id'])
+            role = get_object_or_404(Role, id=serializer.validated_data['role_id'])
 
-            role = Role.objects.get(id=serializer.validated_data['role_id'])
-            if role.company != request.user.company:
-                return Response({'error': 'You can only assign roles from within your company.'}, status=status.HTTP_403_FORBIDDEN)
+            if user.company != request.user.company or role.company != request.user.company:
+                return Response({'error': 'You can only assign roles within your company.'}, status=status.HTTP_403_FORBIDDEN)
 
             user.roles.add(role)  # Add the role to the user
-            for perm in role.permissions.all():
-                user.user_permissions.add(perm)  # Add the permissions of the role to the user
-            user.save()
+            user.user_permissions.add(*role.permissions.all())  # Add all role permissions to the user
             return Response({'status': 'role assigned'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ListUsersComapnyView(APIView):
+class ListUsersCompanyView(APIView):
     permission_classes = [IsCompanyAdminUser]
 
     def get_company(self, request):
@@ -405,9 +406,6 @@ class ListUsersComapnyView(APIView):
         users = User.objects.filter(company=request.user.company)
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-    
-
-
 
 
 

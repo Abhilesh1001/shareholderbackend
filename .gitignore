@@ -1,0 +1,104 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.sqlite
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+celerybeat-schedule
+*.pem
+.env
+.vscode/
+
+# If using PostgreSQL or MySQL
+*.pgsql
+*.pgsql.gz
+*.mysql
+*.mysql.gz
+
+# Django migrations
+migrations/
+*/migrations/*.py
+*/migrations/*.pyc
+
+# Static files
+/static/*
+!/static/.gitkeep
+
+# Media files
+/media/*
+!/media/.gitkeep
+
+# Ignore env and virtual environments
+venv/
+ENV/
+env/
+.venv/
+.env/
+
+# IDE files
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+*.code-workspace
+
+# MacOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Anaconda
+*.ipynb_checkpoints
+
+# PyCharm
+# Ignore PyCharm specific files
+.idea/*
+*.iml
+*.iws
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/vcs.xml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Celery related
+celerybeat-schedule  # Celery beat schedule file (generated)
+celerybeat.pid       # Celery beat PID file
+celeryd.pid          # Celery worker PID file
+
+# Ignore Celery logs (if stored locally)
+celery*.log
+
+# Ignore any result backend files (if using a file-based backend)
+celery_results/
+
+# Optional: If you're using django-celery-beat and want to ignore the database migration file
+*/django_celery_beat/migrations/*.py
+*/django_celery_beat/migrations/*.pyc

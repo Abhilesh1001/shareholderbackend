@@ -102,3 +102,4 @@ celery_results/
 # Optional: If you're using django-celery-beat and want to ignore the database migration file
 */django_celery_beat/migrations/*.py
 */django_celery_beat/migrations/*.pyc
+mbdb/db.sqlite3
